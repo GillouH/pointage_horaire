@@ -13,7 +13,7 @@ class Duration:
 		return int(self.minutes / 60)
 
 	def getMinutes(self) -> "int":
-		return abs(self.minutes) % 60
+		return "{:02}".format(abs(self.minutes) % 60)
 
 	def toMinutes(self) -> "int":
 		return self.minutes
@@ -26,12 +26,37 @@ class Duration:
 		assert isinstance(duration, Duration), "Le paramètre \"duration\" doit être un objet du type Duration."
 		return Duration.fromMinutes(self.toMinutes + duration.toMinutes)
 	
-	def __iadd__(self, duration:"Duration") -> None:
+	def __iadd__(self, duration:"Duration") -> "Duration":
+		assert isinstance(duration, Duration), "Le paramètre \"duration\" doit être un objet du type Duration."
 		self.minutes += duration.minutes
+		return self
 
 	def __sub__(self, duration:"Duration") -> "Duration":
 		assert isinstance(duration, Duration), "Le paramètre \"duration\" doit être un objet du type Duration."
 		return Duration.fromMinutes(self.toMinutes - duration.toMinutes)
 
-	def __isub__(self, duration:"Duration") -> None:
+	def __isub__(self, duration:"Duration") -> "Duration":
+		assert isinstance(duration, Duration), "Le paramètre \"duration\" doit être un objet du type Duration."
 		self.minutes -= duration.minutes
+		return self
+
+	def __mul__(self, number:"int|float") -> "Duration":
+		assert isinstance(number, int) or isinstance(number, float), "Le paramètre \"number\" doit être un nombre."
+		return Duration.fromMinutes(self.minutes * number)
+
+	def __imul__(self, number:"int|float") -> "Duration":
+		assert isinstance(number, int) or isinstance(number, float), "Le paramètre \"number\" doit être un nombre."
+		self.minutes *= number
+		return self
+
+	def __truediv__(self, number:"int|float") -> "Duration":
+		assert isinstance(number, int) or isinstance(number, float), "Le paramètre \"number\" doit être un nombre."
+		return Duration.fromMinutes(self.minutes / number)
+
+	def __itruediv__(self, number:"int|float") -> "Duration":
+		assert isinstance(number, int) or isinstance(number, float), "Le paramètre \"number\" doit être un nombre."
+		self.minutes /= number
+		return self
+
+	def __neg__(self) -> "Duration":
+		return self * -1

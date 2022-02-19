@@ -20,7 +20,7 @@ class Window(Tk):
 
 	def createCumuleFrame(self):
 		self.cumule:"Duration" = Duration.fromMinutes(self.data[Window.MEMORY_CUMUL])
-		self.cumuleHourTextVariable:"StringVar" = StringVar(value=self.cumule.getHoursStr())
+		self.cumuleHourTextVariable:"StringVar" = StringVar(value=self.cumule.getHours())
 		self.cumuleMinutesTextVariable:"StringVar" = StringVar(value=self.cumule.getMinutes())
 		cumuleFrame:"Frame" = Frame(master=self)
 		cumuleFrame.grid(column=0, row=0)

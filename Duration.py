@@ -24,7 +24,7 @@ class Duration:
 
 	def __add__(self, duration:"Duration") -> "Duration":
 		assert isinstance(duration, Duration), "Le paramètre \"duration\" doit être un objet du type Duration."
-		return Duration.fromMinutes(self.toMinutes + duration.toMinutes)
+		return Duration.fromMinutes(self.toMinutes() + duration.toMinutes())
 	
 	def __iadd__(self, duration:"Duration") -> "Duration":
 		assert isinstance(duration, Duration), "Le paramètre \"duration\" doit être un objet du type Duration."
@@ -33,7 +33,7 @@ class Duration:
 
 	def __sub__(self, duration:"Duration") -> "Duration":
 		assert isinstance(duration, Duration), "Le paramètre \"duration\" doit être un objet du type Duration."
-		return Duration.fromMinutes(self.toMinutes - duration.toMinutes)
+		return Duration.fromMinutes(self.toMinutes() - duration.toMinutes())
 
 	def __isub__(self, duration:"Duration") -> "Duration":
 		assert isinstance(duration, Duration), "Le paramètre \"duration\" doit être un objet du type Duration."
@@ -42,7 +42,7 @@ class Duration:
 
 	def __mul__(self, number:"int|float") -> "Duration":
 		assert isinstance(number, int) or isinstance(number, float), "Le paramètre \"number\" doit être un nombre."
-		return Duration.fromMinutes(self.minutes * number)
+		return Duration.fromMinutes(self.toMinutes() * number)
 
 	def __imul__(self, number:"int|float") -> "Duration":
 		assert isinstance(number, int) or isinstance(number, float), "Le paramètre \"number\" doit être un nombre."
@@ -51,7 +51,7 @@ class Duration:
 
 	def __truediv__(self, number:"int|float") -> "Duration":
 		assert isinstance(number, int) or isinstance(number, float), "Le paramètre \"number\" doit être un nombre."
-		return Duration.fromMinutes(self.minutes / number)
+		return Duration.fromMinutes(self.toMinutes() / number)
 
 	def __itruediv__(self, number:"int|float") -> "Duration":
 		assert isinstance(number, int) or isinstance(number, float), "Le paramètre \"number\" doit être un nombre."

@@ -23,6 +23,7 @@ class Window(Tk):
 		self.data:"dict[str,any]" = self.restoreData()
 		self.createCumuleFrame()
 		self.createTodayFrame()
+		self.createNewCumuleFrame()
 
 	def createCumuleFrame(self):
 		self.cumule:"Duration" = Duration.fromMinutes(minutes=self.data[Window.MEMORY_CUMUL])
@@ -81,8 +82,8 @@ class Window(Tk):
 	def createButtonFrame(self):
 		buttonFrame:"Frame" = Frame(master=self.formFrame)
 		buttonFrame.grid(column=0, row=1)
-		Button(master=buttonFrame, text="J'ai travaillé ! {}".format(emojize(":beaming_face_with_smiling_eyes:")), command=self.substractToTodayTime, font=self.FONT, padx=Window.PADDING).grid(column=0, row=0)
-		Button(master=buttonFrame, text="J'ai trop de travail ! {}".format(emojize(":loudly_crying_face:")), command=self.addToTodayTime, font=self.FONT, padx=Window.PADDING).grid(column=1, row=0)
+		Button(master=buttonFrame, text="J'ai travaillé ! {}".format(emojize(":beaming_face_with_smiling_eyes:")), command=self.substractToTodayCumule, font=self.FONT, padx=Window.PADDING).grid(column=0, row=0)
+		Button(master=buttonFrame, text="J'ai trop de travail ! {}".format(emojize(":loudly_crying_face:")), command=self.addToTodayCumule, font=self.FONT, padx=Window.PADDING).grid(column=1, row=0)
 
 	def createCumuleTodayFrame(self):
 		cumuleTodayFrame:"Frame" = Frame(master=self.todayFrame, padx=Window.PADDING)
@@ -95,19 +96,34 @@ class Window(Tk):
 		Label(master=cumuleTodayFrame, text="H", font=self.FONT).grid(column=2, row=0)
 		Label(master=cumuleTodayFrame, textvariable=self.cumuleTodayMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
 
-	def updateCumuleToday(self, durationToAdd:"Duration"):
+	def updateTodayCumuleAndNewCumule(self, durationToAdd:"Duration"):
 		self.cumuleToday += durationToAdd
 		self.cumuleTodayHourTextVariable.set(value=self.cumuleToday.getHours())
 		self.cumuleTodayMinutesTextVariable.set(value=self.cumuleToday.getMinutes())
 
+		self.newCumule = self.cumule + self.cumuleToday
+		self.newCumuleHourTextVariable.set(value=self.newCumule.getHours())
+		self.newCumuleMinutesTextVariable.set(value=self.newCumule.getMinutes())
+
 	def getEntryDuration(self):
 		return Duration.fromMinutes(minutes=int(self.hoursTextVariable.get())*60+int(self.minutesTextVariable.get()))
 
-	def substractToTodayTime(self):
-		self.updateCumuleToday(self.getEntryDuration()*-1)
+	def substractToTodayCumule(self):
+		self.updateTodayCumuleAndNewCumule(self.getEntryDuration()*-1)
 
-	def addToTodayTime(self):
-		self.updateCumuleToday(self.getEntryDuration())
+	def addToTodayCumule(self):
+		self.updateTodayCumuleAndNewCumule(self.getEntryDuration())
+
+	def createNewCumuleFrame(self):
+		self.newCumule:"Duration" = self.cumule + self.cumuleToday
+		self.newCumuleHourTextVariable:"StringVar" = StringVar(value=self.newCumule.getHours())
+		self.newCumuleMinutesTextVariable:"StringVar" = StringVar(value=self.newCumule.getMinutes())
+		newCumuleFrame:"Frame" = Frame(master=self)
+		newCumuleFrame.grid(column=0, row=2)
+		Label(master=newCumuleFrame, text="Nouveau Cumule : ", font=self.FONT).grid(column=0, row=0)
+		Label(master=newCumuleFrame, textvariable=self.newCumuleHourTextVariable, font=self.FONT).grid(column=1, row=0)
+		Label(master=newCumuleFrame, text="H", font=self.FONT).grid(column=2, row=0)
+		Label(master=newCumuleFrame, textvariable=self.newCumuleMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
 
 	def restoreData(self) -> "dict[str,any]":
 		try:
@@ -121,6 +137,7 @@ class Window(Tk):
 			}
 	
 	def saveData(self):
+		self.data[Window.MEMORY_CUMUL] = self.newCumule.toMinutes()
 		dataJson:"str" = dumps(obj=self.data, indent=4, ensure_ascii=False)
 		with open(Window.MEMORY_FILE, "w") as file:
 			file.write(dataJson)

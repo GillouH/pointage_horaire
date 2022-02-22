@@ -117,12 +117,12 @@ class Window(Tk):
 		self.newCumul:"Duration" = self.cumul + self.cumulToday
 		self.newCumulHourTextVariable:"StringVar" = StringVar(value=self.newCumul.getHours())
 		self.newCumulMinutesTextVariable:"StringVar" = StringVar(value=self.newCumul.getMinutes())
-		newCumulFrame:"Frame" = Frame(master=self)
-		newCumulFrame.grid(column=0, row=2)
-		Label(master=newCumulFrame, text="Nouveau Cumul : ", font=self.FONT).grid(column=0, row=0)
-		Label(master=newCumulFrame, textvariable=self.newCumulHourTextVariable, font=self.FONT).grid(column=1, row=0)
-		Label(master=newCumulFrame, text="H", font=self.FONT).grid(column=2, row=0)
-		Label(master=newCumulFrame, textvariable=self.newCumulMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
+		# newCumulFrame:"Frame" = Frame(master=self)
+		# newCumulFrame.grid(column=0, row=2)
+		# Label(master=newCumulFrame, text="Nouveau Cumul : ", font=self.FONT).grid(column=0, row=0)
+		# Label(master=newCumulFrame, textvariable=self.newCumulHourTextVariable, font=self.FONT).grid(column=1, row=0)
+		# Label(master=newCumulFrame, text="H", font=self.FONT).grid(column=2, row=0)
+		# Label(master=newCumulFrame, textvariable=self.newCumulMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
 
 	def restoreData(self) -> "dict[str,any]":
 		try:

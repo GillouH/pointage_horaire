@@ -5,7 +5,6 @@ from turtle import update
 from Duration import Duration
 from os.path import isfile
 from json import dumps, loads
-from emoji import emojize
 
 class Window(Tk):
 	MEMORY_FILE:"str" = "memory.json"
@@ -21,26 +20,26 @@ class Window(Tk):
 		self.FONT:"Font" = Font(root=self, size=15)
 		self.title(string="Pointage Horaire")
 		self.data:"dict[str,any]" = self.restoreData()
-		self.createCumuleFrame()
+		self.createCumulFrame()
 		self.createTodayFrame()
-		self.createNewCumuleFrame()
+		self.createNewCumulFrame()
 
-	def createCumuleFrame(self):
-		self.cumule:"Duration" = Duration.fromMinutes(minutes=self.data[Window.MEMORY_CUMUL])
-		self.cumuleHourTextVariable:"StringVar" = StringVar(value=self.cumule.getHours())
-		self.cumuleMinutesTextVariable:"StringVar" = StringVar(value=self.cumule.getMinutes())
-		cumuleFrame:"Frame" = Frame(master=self)
-		cumuleFrame.grid(column=0, row=0)
-		Label(master=cumuleFrame, text="Cumule enregistré : ", font=self.FONT).grid(column=0, row=0)
-		Label(master=cumuleFrame, textvariable=self.cumuleHourTextVariable, font=self.FONT).grid(column=1, row=0)
-		Label(master=cumuleFrame, text="H", font=self.FONT).grid(column=2, row=0)
-		Label(master=cumuleFrame, textvariable=self.cumuleMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
+	def createCumulFrame(self):
+		self.cumul:"Duration" = Duration.fromMinutes(minutes=self.data[Window.MEMORY_CUMUL])
+		self.cumulHourTextVariable:"StringVar" = StringVar(value=self.cumul.getHours())
+		self.cumulMinutesTextVariable:"StringVar" = StringVar(value=self.cumul.getMinutes())
+		cumulFrame:"Frame" = Frame(master=self)
+		cumulFrame.grid(column=0, row=0)
+		Label(master=cumulFrame, text="Cumul enregistré : ", font=self.FONT).grid(column=0, row=0)
+		Label(master=cumulFrame, textvariable=self.cumulHourTextVariable, font=self.FONT).grid(column=1, row=0)
+		Label(master=cumulFrame, text="H", font=self.FONT).grid(column=2, row=0)
+		Label(master=cumulFrame, textvariable=self.cumulMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
 
 	def createTodayFrame(self):
 		self.todayFrame :'Frame'= Frame(master=self, padx=Window.PADDING)
 		self.todayFrame.grid(column=0, row=1)
 		self.createFormFrame()
-		self.createCumuleTodayFrame()
+		self.createCumulTodayFrame()
 
 	def createFormFrame(self):
 		self.formFrame:"Frame" = Frame(master=self.todayFrame, padx=Window.PADDING)
@@ -82,48 +81,48 @@ class Window(Tk):
 	def createButtonFrame(self):
 		buttonFrame:"Frame" = Frame(master=self.formFrame)
 		buttonFrame.grid(column=0, row=1)
-		Button(master=buttonFrame, text="J'ai travaillé ! {}".format(emojize(":beaming_face_with_smiling_eyes:")), command=self.substractToTodayCumule, font=self.FONT, padx=Window.PADDING).grid(column=0, row=0)
-		Button(master=buttonFrame, text="J'ai trop de travail ! {}".format(emojize(":loudly_crying_face:")), command=self.addToTodayCumule, font=self.FONT, padx=Window.PADDING).grid(column=1, row=0)
+		Button(master=buttonFrame, text="-", command=self.substractToTodayCumul, font=self.FONT, padx=Window.PADDING).grid(column=0, row=0)
+		Button(master=buttonFrame, text="+", command=self.addToTodayCumul, font=self.FONT, padx=Window.PADDING).grid(column=1, row=0)
 
-	def createCumuleTodayFrame(self):
-		cumuleTodayFrame:"Frame" = Frame(master=self.todayFrame, padx=Window.PADDING)
-		cumuleTodayFrame.grid(column=1, row=0)
-		self.cumuleToday:"Duration" = Duration.fromMinutes(minutes=7*60)
-		self.cumuleTodayHourTextVariable:"StringVar" = StringVar(value=self.cumuleToday.getHours())
-		self.cumuleTodayMinutesTextVariable:"StringVar" = StringVar(value=self.cumuleToday.getMinutes())
-		Label(master=cumuleTodayFrame, text="Cumule aujourd'hui : ", font=self.FONT).grid(column=0, row=0)
-		Label(master=cumuleTodayFrame, textvariable=self.cumuleTodayHourTextVariable, font=self.FONT).grid(column=1, row=0)
-		Label(master=cumuleTodayFrame, text="H", font=self.FONT).grid(column=2, row=0)
-		Label(master=cumuleTodayFrame, textvariable=self.cumuleTodayMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
+	def createCumulTodayFrame(self):
+		cumulTodayFrame:"Frame" = Frame(master=self.todayFrame, padx=Window.PADDING)
+		cumulTodayFrame.grid(column=1, row=0)
+		self.cumulToday:"Duration" = Duration.fromMinutes(minutes=7*60)
+		self.cumulTodayHourTextVariable:"StringVar" = StringVar(value=self.cumulToday.getHours())
+		self.cumulTodayMinutesTextVariable:"StringVar" = StringVar(value=self.cumulToday.getMinutes())
+		Label(master=cumulTodayFrame, text="Cumul aujourd'hui : ", font=self.FONT).grid(column=0, row=0)
+		Label(master=cumulTodayFrame, textvariable=self.cumulTodayHourTextVariable, font=self.FONT).grid(column=1, row=0)
+		Label(master=cumulTodayFrame, text="H", font=self.FONT).grid(column=2, row=0)
+		Label(master=cumulTodayFrame, textvariable=self.cumulTodayMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
 
-	def updateTodayCumuleAndNewCumule(self, durationToAdd:"Duration"):
-		self.cumuleToday += durationToAdd
-		self.cumuleTodayHourTextVariable.set(value=self.cumuleToday.getHours())
-		self.cumuleTodayMinutesTextVariable.set(value=self.cumuleToday.getMinutes())
+	def updateTodayCumulAndNewCumul(self, durationToAdd:"Duration"):
+		self.cumulToday += durationToAdd
+		self.cumulTodayHourTextVariable.set(value=self.cumulToday.getHours())
+		self.cumulTodayMinutesTextVariable.set(value=self.cumulToday.getMinutes())
 
-		self.newCumule = self.cumule + self.cumuleToday
-		self.newCumuleHourTextVariable.set(value=self.newCumule.getHours())
-		self.newCumuleMinutesTextVariable.set(value=self.newCumule.getMinutes())
+		self.newCumul = self.cumul + self.cumulToday
+		self.newCumulHourTextVariable.set(value=self.newCumul.getHours())
+		self.newCumulMinutesTextVariable.set(value=self.newCumul.getMinutes())
 
 	def getEntryDuration(self):
 		return Duration.fromMinutes(minutes=int(self.hoursTextVariable.get())*60+int(self.minutesTextVariable.get()))
 
-	def substractToTodayCumule(self):
-		self.updateTodayCumuleAndNewCumule(self.getEntryDuration()*-1)
+	def substractToTodayCumul(self):
+		self.updateTodayCumulAndNewCumul(self.getEntryDuration()*-1)
 
-	def addToTodayCumule(self):
-		self.updateTodayCumuleAndNewCumule(self.getEntryDuration())
+	def addToTodayCumul(self):
+		self.updateTodayCumulAndNewCumul(self.getEntryDuration())
 
-	def createNewCumuleFrame(self):
-		self.newCumule:"Duration" = self.cumule + self.cumuleToday
-		self.newCumuleHourTextVariable:"StringVar" = StringVar(value=self.newCumule.getHours())
-		self.newCumuleMinutesTextVariable:"StringVar" = StringVar(value=self.newCumule.getMinutes())
-		newCumuleFrame:"Frame" = Frame(master=self)
-		newCumuleFrame.grid(column=0, row=2)
-		Label(master=newCumuleFrame, text="Nouveau Cumule : ", font=self.FONT).grid(column=0, row=0)
-		Label(master=newCumuleFrame, textvariable=self.newCumuleHourTextVariable, font=self.FONT).grid(column=1, row=0)
-		Label(master=newCumuleFrame, text="H", font=self.FONT).grid(column=2, row=0)
-		Label(master=newCumuleFrame, textvariable=self.newCumuleMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
+	def createNewCumulFrame(self):
+		self.newCumul:"Duration" = self.cumul + self.cumulToday
+		self.newCumulHourTextVariable:"StringVar" = StringVar(value=self.newCumul.getHours())
+		self.newCumulMinutesTextVariable:"StringVar" = StringVar(value=self.newCumul.getMinutes())
+		newCumulFrame:"Frame" = Frame(master=self)
+		newCumulFrame.grid(column=0, row=2)
+		Label(master=newCumulFrame, text="Nouveau Cumul : ", font=self.FONT).grid(column=0, row=0)
+		Label(master=newCumulFrame, textvariable=self.newCumulHourTextVariable, font=self.FONT).grid(column=1, row=0)
+		Label(master=newCumulFrame, text="H", font=self.FONT).grid(column=2, row=0)
+		Label(master=newCumulFrame, textvariable=self.newCumulMinutesTextVariable, font=self.FONT).grid(column=3, row=0)
 
 	def restoreData(self) -> "dict[str,any]":
 		try:
@@ -137,7 +136,7 @@ class Window(Tk):
 			}
 	
 	def saveData(self):
-		self.data[Window.MEMORY_CUMUL] = self.newCumule.toMinutes()
+		self.data[Window.MEMORY_CUMUL] = self.newCumul.toMinutes()
 		dataJson:"str" = dumps(obj=self.data, indent=4, ensure_ascii=False)
 		with open(Window.MEMORY_FILE, "w") as file:
 			file.write(dataJson)
